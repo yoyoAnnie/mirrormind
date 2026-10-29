@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MirrorMind · 镜心</title>
+<meta name="description" content="A personal agent for students at a turning point. 写给站在转折点上的学生的个人助手。">
+<meta name="theme-color" content="#FBFAF8">
+<link rel="canonical" href="https://YOUR-USERNAME.github.io/mirrormind/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MirrorMind · 镜心">
+<meta property="og:description" content="I wanted to know who I was before I had to decide what to do next. 我想在决定下一步做什么之前，先弄清楚自己是谁。">
+<meta property="og:url" content="https://YOUR-USERNAME.github.io/mirrormind/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%234338CA'/%3E%3Ccircle cx='50' cy='50' r='22' fill='none' stroke='white' stroke-width='7'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{--bg:#FBFAF8;--ink:#1D1D1F;--muted:#636366;--card:#F3F1ED;--dark:#1C1C1E;--dark2:#B4B4BA;--acc:#4338CA;--acc2:#EEF0FF;--line:#E4E1DB}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased}
+.serif{font-family:"New York",Georgia,"Songti SC","Noto Serif SC",serif;letter-spacing:-.01em;line-height:1.2}
+.zh{display:none}body.zh-mode .en{display:none}body.zh-mode .zh{display:inline}
+.muted{color:var(--muted)}.acc{color:var(--acc)}
+.hdr{background:rgba(251,250,248,.72);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid rgba(0,0,0,.05)}
+.seg{display:inline-flex;background:#ECE9E3;border-radius:999px;padding:3px}
+.seg button{border-radius:999px;padding:5px 14px;font-size:13px;color:var(--muted);transition:all .25s}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.btn{background:var(--acc);color:#fff;border-radius:999px;padding:12px 24px;font-size:15px;font-weight:500;transition:transform .2s,box-shadow .2s;display:inline-flex;gap:8px;align-items:center}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(67,56,202,.28)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.ghost:hover{box-shadow:none;background:var(--card)}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px}
+.soft{background:var(--card);border-radius:20px;padding:26px}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}.reveal.in{opacity:1;transform:none}
+.stage{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 18px;font-size:14px;transition:all .25s}
+.stage.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+select,input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit}
+.idcard{background:var(--dark);color:#fff;border-radius:24px;padding:30px;min-height:260px}
+.idcard .sub{color:var(--dark2);font-size:13px}
+.bar{height:8px;background:#E4E1DB;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+#fab{position:fixed;right:20px;bottom:20px;z-index:50;background:var(--acc);color:#fff;border-radius:999px;padding:14px 20px;display:flex;gap:8px;align-items:center;box-shadow:0 10px 30px rgba(67,56,202,.35);font-weight:500;transition:transform .2s}
+#fab:hover{transform:scale(1.04)}
+#panel{position:fixed;right:20px;bottom:84px;width:392px;max-width:calc(100vw - 24px);height:600px;max-height:calc(100vh - 110px);z-index:60;background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.2);display:flex;flex-direction:column;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(16px) scale(.97);pointer-events:none;transition:all .3s cubic-bezier(.2,.8,.2,1)}
+#panel.open{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+#log{flex:1;overflow-y:auto;padding:16px;scroll-behavior:smooth}
+.msg{margin:8px 0;padding:10px 14px;border-radius:16px;max-width:88%;background:var(--card);font-size:14.5px;line-height:1.6;animation:pop .3s ease}
+.msg.you{background:var(--acc);color:#fff;margin-left:auto}
+.tool{margin:10px 0;border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--acc2);font-size:14px;animation:pop .35s ease}
+.tool h4{font-weight:600;display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.chip{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;cursor:pointer;transition:all .2s}.chip:hover{border-color:var(--acc);color:var(--acc)}
+.chip.sel{background:var(--acc);color:#fff;border-color:var(--acc)}
+#drawer{position:absolute;inset:0;background:#fff;z-index:5;padding:18px;overflow-y:auto;transform:translateX(100%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility .35s}
+#drawer.open{transform:none;visibility:visible}
+.step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-size:11px}.dot.done{background:var(--acc);border-color:var(--acc);color:#fff}
+input[type=range]{width:100%;accent-color:var(--acc)}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:640px){#panel{right:0;left:0;bottom:0;width:100%;max-width:100%;height:78vh;max-height:78vh;border-radius:24px 24px 0 0}#fab{right:12px;bottom:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a href="#top" class="sr-only focus:not-sr-only" style="position:absolute;left:8px;top:8px;z-index:100;background:#fff;padding:8px 12px"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
+
+<header class="hdr sticky top-0 z-40">
+ <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between gap-4">
+  <a href="#top" class="serif text-xl font-semibold">Mirror<span class="acc">Mind</span></a>
+  <nav class="hidden md:flex gap-6 text-sm" aria-label="Main">
+   <a href="#journey"><span class="en">Journey</span><span class="zh">旅程</span></a>
+   <a href="#season"><span class="en">Season card</span><span class="zh">阶段卡</span></a>
+   <a href="#why"><span class="en">Why it works</span><span class="zh">为什么有用</span></a>
+  </nav>
+  <div class="seg" role="group" aria-label="Language 语言">
+   <button id="bEn" class="on" onclick="setLang('en')" aria-pressed="true">EN</button><button id="bZh" onclick="setLang('zh')" aria-pressed="false">中文</button>
+  </div>
+ </div>
+</header>
+
+<main id="top">
+<section class="max-w-6xl mx-auto px-5 pt-20 pb-16 md:pt-28">
+ <p class="text-sm uppercase tracking-widest muted"><span class="en">A note from me</span><span class="zh">我想对你说的</span></p>
+ <h1 class="serif text-4xl md:text-6xl font-semibold mt-5 max-w-4xl">
+  <span class="en">I wanted to know who I was before I had to decide what to do next.</span>
+  <span class="zh">我想在决定下一步做什么之前，先弄清楚自己是谁。</span>
+ </h1>
+ <p class="text-lg md:text-xl mt-6 max-w-2xl" style="color:#424245">
+  <span class="en">When you’re choosing between two paths, it rarely feels like a math problem. It feels like a question about who you’re going to become. I kept getting stuck there, so I built a small place to think it through, one honest line a day.</span>
+  <span class="zh">当你在两条路之间犹豫时，那很少像一道数学题，更像是在问：我将要成为谁。我总是卡在这里，所以做了一个小小的地方，让我可以慢慢想，每天只写一句真话。</span>
+ </p>
+ <div class="mt-8 flex flex-wrap gap-3">
+  <button class="btn" onclick="openChat();setTimeout(function(){say('stuck')},400)"><i data-lucide="message-circle" class="w-4 h-4"></i><span class="en">Tell me where you’re stuck</span><span class="zh">说说你卡在哪里</span></button>
+  <a class="btn ghost" href="#journey"><span class="en">See how it works</span><span class="zh">看看它怎么运作</span></a>
+ </div>
+ <div class="mt-14 grid md:grid-cols-3 gap-4">
+  <div class="soft reveal"><i data-lucide="pen-line" class="w-6 h-6 acc mb-3"></i><p class="font-semibold"><span class="en">One line a day</span><span class="zh">每天一句</span></p><p class="text-sm muted mt-1"><span class="en">No long forms. Over weeks, a quiet picture of you appears.</span><span class="zh">不用填长表格。几周之后，一幅安静的关于你的画像会慢慢出现。</span></p></div>
+  <div class="soft reveal"><i data-lucide="footprints" class="w-6 h-6 acc mb-3"></i><p class="font-semibold"><span class="en">One small experiment</span><span class="zh">一个小实验</span></p><p class="text-sm muted mt-1"><span class="en">A conversation, a shadow day, a two-week trial. Real life, not guessing.</span><span class="zh">一次谈话、一天跟岗、两周试试看。用真实生活，而不是猜。</span></p></div>
+  <div class="soft reveal"><i data-lucide="lock" class="w-6 h-6 acc mb-3"></i><p class="font-semibold"><span class="en">Diary stays private</span><span class="zh">日记只属于你</span></p><p class="text-sm muted mt-1"><span class="en">You can share a card or a milestone. Your worries stay with you.</span><span class="zh">你可以分享一张卡或一个里程碑，而你的心事只留给自己。</span></p></div>
+ </div>
+</section>
+
+<section id="journey" class="max-w-6xl mx-auto px-5 py-16">
+ <p class="text-sm uppercase tracking-widest muted"><span class="en">The journey</span><span class="zh">旅程</span></p>
+ <h2 class="serif text-3xl md:text-4xl font-semibold mt-3 max-w-3xl"><span class="en">Five small stages, and you can stay on any of them as long as you need.</span><span class="zh">五个很小的阶段，你想在哪一步停多久都可以。</span></h2>
+ <div class="flex flex-wrap gap-2 mt-8" role="tablist" id="stages"></div>
+ <div class="card mt-5 grid md:grid-cols-5 gap-6 items-center" id="stageBody" aria-live="polite"></div>
+</section>
+
+<section id="season" class="max-w-6xl mx-auto px-5 py-16">
+ <div class="grid md:grid-cols-2 gap-8 items-start">
+  <div>
+   <p class="text-sm uppercase tracking-widest muted"><span class="en">Try it · nothing is saved</span><span class="zh">试试看 · 不会保存任何内容</span></p>
+   <h2 class="serif text-3xl md:text-4xl font-semibold mt-3"><span class="en">Name your season. Not forever, just for now.</span><span class="zh">给你现在这个阶段起个名字。不是一辈子，只是此刻。</span></h2>
+   <p class="mt-4 muted"><span class="en">Three questions. I’ll turn them into a card you can share with a friend.</span><span class="zh">三个问题，我会把答案变成一张可以发给朋友的卡片。</span></p>
+   <div class="mt-6 space-y-4">
+    <label class="block text-sm font-semibold"><span class="en">What matters most right now?</span><span class="zh">现在最重要的是什么？</span>
+     <select id="q1" class="mt-1 font-normal" onchange="makeCard()"></select></label>
+    <label class="block text-sm font-semibold"><span class="en">What’s pulling at you?</span><span class="zh">现在是什么在拉扯你？</span>
+     <select id="q2" class="mt-1 font-normal" onchange="makeCard()"></select></label>
+    <label class="block text-sm font-semibold"><span class="en">What are you deciding?</span><span class="zh">你正在做什么决定？</span>
+     <select id="q3" class="mt-1 font-normal" onchange="makeCard()"></select></label>
+   </div>
+  </div>
+  <div>
+   <div class="idcard" id="card" aria-live="polite"></div>
+   <div class="mt-3 flex items-center gap-3"><button class="btn ghost" onclick="copyCard()"><i data-lucide="copy" class="w-4 h-4"></i><span class="en">Copy card</span><span class="zh">复制卡片</span></button><span class="text-sm muted" id="copied" aria-live="polite"></span></div>
+  </div>
+ </div>
+</section>
+
+<section id="why" class="max-w-6xl mx-auto px-5 py-16">
+ <p class="text-sm uppercase tracking-widest muted"><span class="en">Why it’s built this way</span><span class="zh">为什么这样设计</span></p>
+ <h2 class="serif text-3xl md:text-4xl font-semibold mt-3 max-w-3xl"><span class="en">None of this is new. People have been noticing it for decades.</span><span class="zh">这些并不是新发现，研究者已经留意了几十年。</span></h2>
+ <div class="grid md:grid-cols-3 gap-4 mt-8">
+  <div class="card reveal">
+   <i data-lucide="layers" class="w-6 h-6 acc"></i>
+   <h3 class="font-semibold mt-3"><span class="en">Too many choices freeze us</span><span class="zh">选择太多，人会僵住</span></h3>
+   <p class="text-sm mt-2 muted"><span class="en">In a well-known jam study (Iyengar &amp; Lepper, 2000), 24 flavours led to about 3% buying. With 6 flavours, about 30% did. Long lists make comparison louder, so I narrow your options before asking you to commit.</span><span class="zh">在著名的果酱实验里（Iyengar 和 Lepper，2000），24 种口味时大约 3% 的人购买，6 种时约 30%。选项越长，比较的声音越大，所以我会先帮你收窄，再请你做决定。</span></p>
+   <div class="mt-4 text-xs muted"><span class="en">24 flavours · 3%</span><span class="zh">24 种 · 3%</span><div class="bar mt-1"><i style="width:3%"></i></div></div>
+   <div class="mt-2 text-xs muted"><span class="en">6 flavours · 30%</span><span class="zh">6 种 · 30%</span><div class="bar mt-1"><i style="width:30%"></i></div></div>
+  </div>
+  <div class="card reveal">
+   <i data-lucide="scale" class="w-6 h-6 acc"></i>
+   <h3 class="font-semibold mt-3"><span class="en">Good enough is allowed</span><span class="zh">「足够好」就可以了</span></h3>
+   <p class="text-sm mt-2 muted"><span class="en">Herbert Simon (1955) argued that people don’t find the perfect option, they find one that’s good enough. Decision fatigue is real too (Baumeister et al., 1998). So the next step only has to be testable, not perfect on paper.</span><span class="zh">Herbert Simon（1955）提出，人们并不是在找完美的选项，而是在找一个足够好的。决策疲劳也是真实存在的（Baumeister 等，1998）。所以下一步只需要可以去试，不需要在纸面上完美。</span></p>
+  </div>
+  <div class="card reveal">
+   <i data-lucide="compass" class="w-6 h-6 acc"></i>
+   <h3 class="font-semibold mt-3"><span class="en">It should feel like your choice</span><span class="zh">它应该是你自己的选择</span></h3>
+   <p class="text-sm mt-2 muted"><span class="en">Self-determination theory (Deci &amp; Ryan, 2000) says we do better when we feel autonomous and capable. MirrorMind never hands you a verdict. It hands you a small thing to try, and you decide what to make of it.</span><span class="zh">自我决定理论（Deci 和 Ryan，2000）认为，当我们感到自主、感到自己有能力时，状态会更好。镜心从不给你判决，只给你一件可以试试的小事，怎么理解它由你决定。</span></p>
+  </div>
+ </div>
+ <div class="soft mt-6 flex gap-3 items-start"><i data-lucide="shield-check" class="w-5 h-5 acc mt-1 flex-none"></i><p class="text-sm"><span class="en"><b>What this is not.</b> It isn’t therapy, it doesn’t diagnose, and it doesn’t replace a counsellor. If things feel heavy, please talk to a campus service, a counsellor, or emergency services where you live.</span><span class="zh"><b>它不是什么。</b>它不是心理治疗，不做诊断，也不能代替咨询师。如果你觉得很沉重，请联系学校的咨询服务、咨询师，或你所在地的紧急服务。</span></p></div>
+</section>
+</main>
+
+<footer class="max-w-6xl mx-auto px-5 py-12 pb-28 text-sm muted">
+ <p><span class="en">MirrorMind is an early concept. Statistics from my business plan should be verified against the original reports before formal use. This page collects no personal data.</span><span class="zh">镜心目前还是一个早期概念。我商业计划书中的统计数据，在正式使用前需要对照原始报告核实。本页面不会收集任何个人数据。</span></p>
+</footer>
+
+<button id="fab" onclick="toggleChat()" aria-label="Open MirrorMind chat 打开对话"><i data-lucide="sparkles" class="w-5 h-5"></i><span class="en">Talk to MirrorMind</span><span class="zh">和镜心聊聊</span></button>
+<section id="panel" role="dialog" aria-label="MirrorMind chat">
+ <div class="flex items-center justify-between px-4 py-3 border-b" style="border-color:var(--line)">
+  <div><p class="font-semibold text-sm">MirrorMind</p><p class="text-xs muted"><span class="en">Plugin prototype</span><span class="zh">插件原型</span></p></div>
+  <div class="flex gap-1">
+   <button class="p-2 rounded-full hover:bg-stone-100" onclick="toggleDrawer()" aria-label="Learning loop 学习循环"><i data-lucide="repeat-2" class="w-5 h-5"></i></button>
+   <button class="p-2 rounded-full hover:bg-stone-100" onclick="toggleChat()" aria-label="Close 关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+  </div>
+ </div>
+ <div id="log" aria-live="polite"></div>
+ <div class="px-4 pb-1 flex gap-2 overflow-x-auto" id="chips"></div>
+ <div class="p-3 flex gap-2 border-t" style="border-color:var(--line)">
+  <input type="text" id="inp" onkeydown="if(event.key==='Enter')send()" aria-label="Message 消息">
+  <button class="btn" style="padding:10px 14px" onclick="send()" aria-label="Send 发送"><i data-lucide="arrow-up" class="w-4 h-4"></i></button>
+ </div>
+ <div id="drawer">
+  <div class="flex items-center justify-between"><h3 class="font-semibold"><span class="en">My learning loop</span><span class="zh">我的学习循环</span></h3><button onclick="toggleDrawer()" class="p-2 rounded-full hover:bg-stone-100" aria-label="Back 返回"><i data-lucide="chevron-right" class="w-5 h-5"></i></button></div>
+  <p class="text-sm muted mt-1"><span class="en">Each guess about yourself gets tested, then updated. Tap a step when it’s done.</span><span class="zh">你对自己的每一个猜想都会被检验，然后更新。完成一步就点一下。</span></p>
+  <div class="soft mt-4" style="padding:16px"><p class="text-xs muted"><span class="en">Active hypothesis</span><span class="zh">当前假设</span></p><p class="font-semibold text-sm mt-1"><span class="en">“I’d be happier in a small team.”</span><span class="zh">「我在小团队里会更开心。」</span></p></div>
+  <div id="steps" class="mt-3"></div>
+  <p class="text-xs muted mt-4" id="loopNote"></p>
+ </div>
+</section>
+
+<noscript><p style="padding:16px;text-align:center">Please enable JavaScript to use the interactive parts of this page. 请开启 JavaScript 以使用页面的互动部分。</p></noscript>
+
+<script>
+var $=function(id){return document.getElementById(id)};
+var zh=function(){return document.body.classList.contains('zh-mode')};
+var b=function(e,z){return '<span class="en">'+e+'</span><span class="zh">'+z+'</span>'};
+var icons=function(){if(window.lucide)lucide.createIcons()};
+
+/* language */
+function setLang(l){
+ document.body.classList.toggle('zh-mode',l==='zh');document.documentElement.lang=l==='zh'?'zh-CN':'en';
+ $('bEn').classList.toggle('on',l==='en');$('bZh').classList.toggle('on',l==='zh');
+ $('bEn').setAttribute('aria-pressed',l==='en');$('bZh').setAttribute('aria-pressed',l==='zh');
+ $('inp').placeholder=l==='zh'?'试试输入：stuck、simulate、compare…':'Try: stuck, simulate, compare…';
+ fillSel('q1',Q1);fillSel('q2',Q2);fillSel('q3',Q3);makeCard();
+ try{localStorage.setItem('mm-lang',l)}catch(e){}
+}
+
+/* journey */
+var ST=[
+ {k:'Understand',z:'了解自己',i:'eye',e:'Start by noticing, not deciding. Write one honest line a day. After a few weeks you’ll see what you keep coming back to, and what you keep avoiding.',zt:'先观察，别急着决定。每天写一句真话。几周之后，你会看到自己总在回到什么、又总在躲开什么。'},
+ {k:'Expand',z:'打开视野',i:'maximize-2',e:'Before narrowing anything, I want you to see more than two doors. Most of us are choosing between the first two options we thought of.',zt:'在收窄之前，我想让你看到不止两扇门。我们大多数人，只是在最先想到的两个选项里挑。'},
+ {k:'Explore',z:'去试一试',i:'compass',e:'Turn the worry into a small test. A coffee with someone who lives that life, a shadow day, two weeks of trying it. Real evidence beats imagined futures.',zt:'把担心变成一个小测试。和过着那种生活的人喝杯咖啡、跟岗一天、试两周。真实的证据，胜过想象出来的未来。'},
+ {k:'Decide',z:'做出选择',i:'scale',e:'Now weigh what you actually learned against what you actually care about. Good enough and testable is a fine place to land.',zt:'现在，把你真正学到的和你真正在乎的放在一起称一称。「足够好、而且可以试」，就是一个很好的落点。'},
+ {k:'Commit',z:'承诺一步',i:'flag',e:'Pick one next step, not forty. Give it a date to look back. Then let what happens teach you something about yourself.',zt:'只选一个下一步，不要四十个。给它定一个回头看的日子。然后让发生的事，教你更了解自己。'}
+];
+var cur=0;
+function pickStage(i){cur=i;renderStages()}
+function renderStages(){
+ $('stages').innerHTML=ST.map(function(s,i){return '<button role="tab" aria-selected="'+(i===cur)+'" class="stage '+(i===cur?'on':'')+'" onclick="pickStage('+i+')">'+(i+1)+' · '+b(s.k,s.z)+'</button>'}).join('');
+ var s=ST[cur];
+ $('stageBody').innerHTML='<div class="md:col-span-2 soft flex items-center justify-center" style="min-height:160px"><i data-lucide="'+s.i+'" class="acc" style="width:64px;height:64px;stroke-width:1.2"></i></div>'+
+ '<div class="md:col-span-3"><h3 class="serif text-2xl font-semibold">'+b(s.k,s.z)+'</h3><p class="mt-3" style="color:#424245">'+b(s.e,s.zt)+'</p><div class="bar mt-5"><i style="width:'+((cur+1)*20)+'%"></i></div></div>';
+ icons();
+}
+
+/* season card */
+var Q1=[['stability and a clear next step','稳定，和一个清楚的下一步'],['freedom to explore and create','自由，去探索和创造'],['being useful to people I care about','对我在意的人有用'],['proving I can do hard things','证明我能做好难的事']];
+var Q2=[['family expectations','家里的期待'],['comparing myself with peers online','和网上同龄人的比较'],['the fear of choosing wrong','害怕选错'],['too many interesting paths','太多有意思的路']];
+var Q3=[['big company or start-up','去大公司还是去创业'],['which major to pick','选哪个专业'],['whether to stay or move cities','留下还是换个城市'],['the safe path or the creative one','走稳妥的路还是有创造力的路']];
+function fillSel(id,a){
+ var el=$(id),v=el.value||'0',z=zh();
+ el.innerHTML=a.map(function(x,i){return '<option value="'+i+'">'+(z?x[1]:x[0])+'</option>'}).join('');
+ el.value=v;
+}
+function makeCard(){
+ var a=Q1[+$('q1').value],p=Q2[+$('q2').value],d=Q3[+$('q3').value];
+ $('card').innerHTML='<p class="sub">'+b('My season right now','我现在这个阶段')+'</p>'+
+ '<p class="serif text-2xl mt-3">'+b('I care most about '+a[0]+'. I’m carrying '+p[0]+'. And I’m deciding: '+d[0]+'.','我现在最在乎'+a[1]+'。我带着'+p[1]+'。我在想的是：'+d[1]+'。')+'</p>'+
+ '<p class="mt-5 text-sm" style="color:#E5E5EA">'+b('Next experiment: try one path for two weeks and notice what actually gives me energy, not what looks best on paper.','下一个实验：在真实生活里试一条路两周，留意真正让我有力气的是什么，而不是纸面上看起来最好的。')+'</p>'+
+ '<p class="sub mt-5">'+b('Share the card. Keep the diary.','分享卡片，日记留给自己。')+'</p>';
+}
+function copyCard(){
+ var t=$('card').innerText;
+ var ok=function(){$('copied').textContent=zh()?'已复制':'Copied'},no=function(){$('copied').textContent=zh()?'请手动选中复制':'Select the text to copy'};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,no)}else no();
+}
+
+/* chat */
+function toggleChat(){var o=!$('panel').classList.contains('open');$('panel').classList.toggle('open',o);if(o&&!$('log').children.length)welcome();if(o)setTimeout(function(){$('inp').focus()},300)}
+function openChat(){if(!$('panel').classList.contains('open'))toggleChat()}
+function toggleDrawer(){$('drawer').classList.toggle('open')}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('panel').classList.contains('open')){if($('drawer').classList.contains('open'))toggleDrawer();else toggleChat()}});
+function addMsg(html,you){var d=document.createElement('div');d.className='msg'+(you?' you':'');if(you)d.textContent=html;else d.innerHTML=html;$('log').appendChild(d);scrl();return d}
+function addTool(html){var d=document.createElement('div');d.className='tool';d.innerHTML=html;$('log').appendChild(d);icons();scrl()}
+function scrl(){$('log').scrollTop=$('log').scrollHeight}
+function welcome(){
+ addMsg(b('Hi. I’m here. One honest line is enough for today. What’s sitting on your chest?','嗨，我在。今天只要说一句真话就够了。你心里压着什么？'));
+ $('chips').innerHTML=[['stuck','卡住了'],['simulate','模拟'],['futures','三种未来'],['compare','比较'],['story','故事'],['radar','雷达']].map(function(c){return '<button class="chip whitespace-nowrap" onclick="say(\''+c[0]+'\')">'+b(c[0],c[1])+'</button>'}).join('');
+}
+function say(t){$('inp').value=t;send()}
+var R=[
+ [['simulate','test'],'Okay, let’s make it small and real instead of imagined.','好，我们把它变小、变真实，而不是只在脑子里想。',function(){simTool()}],
+ [['futures','plan b'],'Most of us only see two doors. Here are three.','我们大多数人只看得到两扇门。这里有三扇。',function(){futTool()}],
+ [['filter','compare'],'Let’s weigh it, but you set what matters, not me.','我们来称一称，不过什么重要由你定，不是我。',function(){filTool()}],
+ [['story','people'],'Sometimes it helps to hear how it felt for someone else.','有时候，听听别人当时是什么感觉，会有帮助。',function(){storyTool()}],
+ [['stuck','decide'],'That stuck feeling usually has a reason. Let’s find where you are.','卡住的感觉通常是有原因的。我们先找找你现在在哪一步。',function(){stuckTool()}],
+ [['radar','explore'],'Here are a few directions near what you already care about.','这里有几个，离你已经在乎的东西很近的方向。',function(){radarTool()}]
+];
+var DEF=[['Thank you for telling me that. I’ve noted it. If you want, tell me what you were hoping would happen, not what you think should.','谢谢你告诉我。我记下了。如果你愿意，说说你希望发生什么，而不是你觉得应该发生什么。'],['That sounds heavier than it looks from outside. What’s the part you keep replaying?','这听起来比旁人看到的要沉重。你总在脑子里重放的是哪一部分？'],['I don’t think you need the right answer today. What’s one thing you could find out this week?','我觉得你今天不需要正确答案。这周有什么事是你可以去弄清楚的？']];
+var di=0;
+function send(){
+ var v=$('inp').value.trim();if(!v)return;addMsg(v,true);$('inp').value='';
+ var l=v.toLowerCase();var hit=R.filter(function(r){return r[0].some(function(k){return l.indexOf(k)>-1})})[0];
+ setTimeout(function(){
+  if(hit){addMsg(b(hit[1],hit[2]));hit[3]()}
+  else{var d=DEF[di++%DEF.length];addMsg(b(d[0],d[1]))}
+ },450);
+}
+
+/* tools */
+function simTool(){
+ addTool('<h4><i data-lucide="flask-conical" class="w-4 h-4"></i>'+b('Future Simulator','未来模拟器')+'</h4>'+
+ '<p>'+b('Name the path you’re weighing:','说出你在掂量的那条路：')+'</p>'+
+ '<input type="text" class="mt-2" placeholder="'+(zh()?'例如：去一家创业公司':'e.g. a start-up job')+'" aria-label="Path 路径">'+
+ '<button class="btn mt-3" style="padding:8px 16px;font-size:13px" onclick="runSim(this)">'+b('Make my experiment','生成我的实验')+'</button><div class="sim mt-3"></div>');
+}
+function runSim(btn){
+ var inp=btn.parentNode.querySelector('input');
+ var raw=inp.value.trim();
+ var v=raw?raw.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}):'';
+ var e=v?'“'+v+'”':'this path',z=v?'「'+v+'」':'这条路';
+ btn.parentNode.querySelector('.sim').innerHTML='<ol class="space-y-2">'+
+ '<li>① '+b('Coffee with one person who actually lives '+e+'. Ask what a boring Tuesday looks like.','和一位真正过着'+z+'的人喝杯咖啡。问问他普通的星期二是什么样。')+'</li>'+
+ '<li>② '+b('Shadow a day, or do a small piece of the real work.','跟岗一天，或者做一小块真实的工作。')+'</li>'+
+ '<li>③ '+b('Two weeks later, write: what gave me energy? What drained me?','两周后写下：什么让我有力气？什么让我很累？')+'</li></ol>';
+}
+function futTool(){
+ var P=[['Plan A · Current','方案 A · 现在的路','Keep going, but name what you’d change.','继续走，但说清楚你想改什么。'],['Plan B · Adjacent','方案 B · 相邻的路','Same strengths, different setting.','同样的优势，换一个环境。'],['Plan C · Alternative','方案 C · 另类的路','The one you’re a bit embarrassed to say out loud.','那条你有点不好意思说出口的路。']];
+ addTool('<h4><i data-lucide="git-fork" class="w-4 h-4"></i>'+b('Three Futures','三种未来')+'</h4><div class="space-y-2">'+P.map(function(p){return '<div class="bg-white rounded-xl p-3 border" style="border-color:var(--line)"><b>'+b(p[0],p[1])+'</b><br><span class="muted">'+b(p[2],p[3])+'</span></div>'}).join('')+'</div>');
+}
+var FS={A:[6,9,5,7],B:[8,4,9,6]};
+function filTool(){
+ var id='f'+Date.now();
+ var C=[['Meaning','意义'],['Stability','稳定'],['Growth','成长'],['People','人际']];
+ addTool('<h4><i data-lucide="sliders-horizontal" class="w-4 h-4"></i>'+b('Decision Filter','决策过滤器')+'</h4>'+
+ '<p class="muted mb-2">'+b('Slide for how much each matters to you right now. The scores for each path are just an example.','拖动表示每一项现在对你多重要。每条路的分数只是示例。')+'</p>'+
+ C.map(function(c,i){return '<label class="block text-xs mt-2">'+b(c[0],c[1])+'<input type="range" min="0" max="10" value="5" oninput="calc(\''+id+'\')"></label>'}).join('')+
+ '<div id="'+id+'" class="mt-3"></div>');
+ calc(id);
+}
+function calc(id){
+ var root=$(id).parentNode;var w=[].slice.call(root.querySelectorAll('input[type=range]')).map(function(x){return +x.value});
+ var sum=w.reduce(function(a,x){return a+x},0)||1;
+ var sc=function(k){return Math.round(w.reduce(function(a,x,i){return a+x*FS[k][i]},0)/sum*10)};
+ var a=sc('A'),c=sc('B');
+ $(id).innerHTML='<div class="text-xs">'+b('Big company','大公司')+' · '+a+'</div><div class="bar mb-2"><i style="width:'+a+'%"></i></div><div class="text-xs">'+b('Start-up','创业公司')+' · '+c+'</div><div class="bar"><i style="width:'+c+'%"></i></div>';
+}
+function storyTool(){
+ addTool('<h4><i data-lucide="book-open" class="w-4 h-4"></i>'+b('Someone else’s turn','另一个人的经历')+'</h4>'+
+ '<p>'+b('“I took the safe offer. Six months in, I realised I’d never asked what I wanted my weeks to feel like. I didn’t quit. I started staying late on the projects that lit me up, and that told me more than any list had.”','「我选了稳妥的那个 offer。半年后我才发现，我从没问过自己，希望每一周是什么感觉。我没有辞职，只是开始在让我发光的项目上多待一会儿，这比任何清单都更能告诉我答案。」')+'</p><p class="text-xs muted mt-2">'+b('A composite story, written for illustration.','这是一个为说明而写的综合故事。')+'</p>');
+}
+var SS=[['Understand','了解自己','Spend a few days just writing down what you notice.','先花几天，只记录你注意到的东西。'],['Expand','打开视野','You may be choosing between too few options. Add a third.','你也许只在很少的选项里挑。加上第三个。'],['Explore','去试一试','Stop thinking. Pick one small test for this week.','先别想了。为这周挑一个小测试。'],['Decide','做出选择','You likely know enough. What would “good enough” be?','你可能已经知道得够多了。什么算「足够好」？'],['Commit','承诺一步','Choose one next step and a date to look back.','选一个下一步，和一个回头看的日子。']];
+function stuckTool(){
+ var id='s'+Date.now();
+ addTool('<h4><i data-lucide="life-buoy" class="w-4 h-4"></i>'+b('Decision Companion','决策陪伴')+'</h4><p class="mb-2">'+b('Which sounds most like you today?','哪一个最像今天的你？')+'</p><div class="flex flex-wrap gap-2">'+
+ SS.map(function(s,i){return '<button class="chip" onclick="stuckPick(this,'+i+',\''+id+'\')">'+b(s[0],s[1])+'</button>'}).join('')+'</div><p id="'+id+'" class="mt-3"></p>');
+}
+function stuckPick(btn,i,id){
+ [].forEach.call(btn.parentNode.querySelectorAll('.chip'),function(c){c.classList.remove('sel')});
+ btn.classList.add('sel');$(id).innerHTML=b(SS[i][2],SS[i][3]);scrl();
+}
+function radarTool(){
+ var O=[['Product design','产品设计'],['User research','用户研究'],['Teaching or mentoring','教学或辅导'],['Writing and storytelling','写作与讲故事']];
+ var id='r'+Date.now();
+ addTool('<h4><i data-lucide="radar" class="w-4 h-4"></i>'+b('Opportunity Radar','机会雷达')+'</h4><p class="mb-2">'+b('Tap what makes you curious.','点一点让你好奇的。')+'</p><div class="flex flex-wrap gap-2">'+
+ O.map(function(o){return '<button class="chip" aria-pressed="false" onclick="radarTog(this,\''+id+'\')">'+b(o[0],o[1])+'</button>'}).join('')+'</div><p id="'+id+'" class="mt-3 text-xs muted"></p>');
+}
+function radarTog(btn,id){
+ var on=btn.getAttribute('aria-pressed')==='true';btn.setAttribute('aria-pressed',String(!on));btn.classList.toggle('sel',!on);
+ var k=btn.parentNode.querySelectorAll('.sel').length;
+ $(id).innerHTML=k?b(k+' picked. Next: talk to someone who does this.','已选 '+k+' 个。下一步：和做这件事的人聊一次。'):'';
+}
+
+/* learning loop */
+var LOOP=[['Hypothesis','假设','I’d be happier in a small team.','我在小团队里会更开心。'],['Prediction','预测','I’ll feel more energy after a day with a 5-person team.','和 5 人团队待一天后，我会更有精神。'],['Experiment','实验','Shadow a start-up for one day.','去一家创业公司跟岗一天。'],['Observation','观察','What did I actually feel at 4pm?','下午四点，我真正的感受是什么？'],['Updated belief','更新后的想法','Write it in your own words.','用你自己的话写下来。']];
+var loopDone=0;
+function loopTap(i){loopDone=i<loopDone?i:i+1;renderLoop()}
+function renderLoop(){
+ $('steps').innerHTML=LOOP.map(function(s,i){return '<button class="step w-full text-left" onclick="loopTap('+i+')"><span class="dot '+(i<loopDone?'done':'')+'">'+(i<loopDone?'✓':i+1)+'</span><span><b>'+b(s[0],s[1])+'</b><br><span class="muted">'+b(s[2],s[3])+'</span></span></button>'}).join('');
+ $('loopNote').innerHTML=loopDone===5?b('One full loop done. Your belief just got a little more yours.','完成了一整圈。你的想法，又多了一点属于你自己。'):b('Your diary is never shared. Only milestones are.','日记不会被分享，只有里程碑可以。');
+}
+
+/* reveal */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+[].forEach.call(document.querySelectorAll('.reveal'),function(e){io.observe(e)});
+
+fillSel('q1',Q1);fillSel('q2',Q2);fillSel('q3',Q3);
+renderStages();renderLoop();
+var saved='en';try{saved=localStorage.getItem('mm-lang')||(/^zh/i.test(navigator.language)?'zh':'en')}catch(e){}
+setLang(saved);icons();
+</script>
+</body>
+</html>
